@@ -3,4 +3,9 @@ project(PixelHellC C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(PixelHellC main.c)
+# Our Project
+add_executable(PixelHellC main.c
+        render/window.c
+        src/state.c
+        src/pattern.c
+        src/patterns.c)
