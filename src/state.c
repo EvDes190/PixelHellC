@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <time.h>
 
 #import "pattern.c"
 
@@ -14,9 +15,10 @@ typedef struct field_state {
     //own field for every working pattern, maximum PATTERN_MAX
     struct field* fields[PATTERN_MAX];
     struct player player;
+    unsigned int colors[FIELD_RANGE][FIELD_RANGE];
     int fields_top;
     //time elapsed after start game
-    int time;
+    clock_t time;
     //if 1 - game is on
     int game;
 } f_state;
@@ -27,18 +29,42 @@ struct pattern choose_pattern(f_state* state) {
     return p;
 }
 
+void update_field_top(f_state* state) {
+    for (int x = 0; x < FIELD_RANGE; x++) {
+        for (int y = 0; y < FIELD_RANGE; y++) {
+            state->colors[x][y] = 0;
+            int highest = 0;
+            for (int i = 0; i < PATTERN_MAX; i++) {
+                if (state->fields[i] == NULL) continue;
+
+                // get color of highest pattern
+                if (highest < state->fields[i]->pattern.height && (state->fields[i]->field[y][x] & 0x00ffffff) != 0)
+                    state->colors[x][y] = state->fields[i]->field[y][x] & 0x00ffffff;
+
+            }
+        }
+    }
+
+    if (state->time != 0) {
+        state->colors[state->player.x][state->player.y] = 0x0000ff00;
+    }
+}
+
 void reset_state(f_state* state) {
     for (int i = 0; i < PATTERN_MAX; i++) {
         free(state->fields[i]);
         state->fields[i] = NULL;
     }
-    state->fields_top = -1;
     state->time = 0;
+    state->fields_top = -1;
+    update_field_top(state);
+
     state->game = 0;
     state->player.HP = 0;
     state->player.x = FIELD_RANGE / 2;
     state->player.y = FIELD_RANGE / 2;
 }
+
 
 void update_field(struct field* p_field) {
     if (p_field == NULL) return;
@@ -50,8 +76,7 @@ void update_field(struct field* p_field) {
     }
 }
 
-int update_state(f_state* state, int move_x, int move_y) {
-
+void update_player(f_state* state, int move_x, int move_y) {
     //update player position
     state->player.x += move_x;
     state->player.y += move_y;
@@ -60,6 +85,10 @@ int update_state(f_state* state, int move_x, int move_y) {
     else if (state->player.x >= FIELD_RANGE) state->player.x = FIELD_RANGE - 1;
     if (state->player.y < 0) state->player.y = 0;
     else if (state->player.y >= FIELD_RANGE) state->player.y = FIELD_RANGE - 1;
+}
+
+int update_state(f_state* state, int move_x, int move_y) {
+    update_player(state, move_x, move_y);
 
     for (int i = 0; i <= state->fields_top; i++) {
         // updating objects by patterns
@@ -71,6 +100,9 @@ int update_state(f_state* state, int move_x, int move_y) {
         state->player.HP -= state->fields[i]->field[state->player.x][state->player.y] >> 24;
     }
 
+    update_field_top(state);
+
+
     if (state->player.HP <= 0) {
         return 1;
     }
@@ -78,21 +110,4 @@ int update_state(f_state* state, int move_x, int move_y) {
     return 0;
 }
 
-void get_field_top(unsigned int colors[FIELD_RANGE][FIELD_RANGE], f_state* state) {
-    for (int x = 0; x < FIELD_RANGE; x++) {
-        for (int y = 0; y < FIELD_RANGE; y++) {
-            colors[x][y] = 0;
-
-            for (int i = 0; i < PATTERN_MAX; i++) {
-                if (state->fields[i] == NULL) continue;
-
-                // get color-part
-                if (colors[x][y] < (state->fields[i]->field[y][x] & 0x00ffffff)) {
-                    colors[x][y] = state->fields[i]->field[y][x] & 0x00ffffff;
-                }
-
-            }
-        }
-    }
-}
 
