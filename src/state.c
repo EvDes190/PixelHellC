@@ -1,27 +1,8 @@
 #include <stdlib.h>
-#include <time.h>
-
-#import "pattern.c"
+#include "../include/pattern.h"
+#include "../include/state.h"
 
 #define HP_MAX 1000
-
-struct player {
-    unsigned int HP;
-    int x;
-    int y;
-};
-
-typedef struct field_state {
-    //own field for every working pattern, maximum PATTERN_MAX
-    struct field* fields[PATTERN_MAX];
-    struct player player;
-    unsigned int colors[FIELD_RANGE][FIELD_RANGE];
-    int fields_top;
-    //time elapsed after start game
-    clock_t time;
-    //if 1 - game is on
-    int game;
-} f_state;
 
 // TODO: need to code function that spawns patterns according to certain rules
 struct pattern choose_pattern(f_state* state) {
@@ -52,7 +33,7 @@ void update_field_top(f_state* state) {
 
 void reset_state(f_state* state) {
     for (int i = 0; i < PATTERN_MAX; i++) {
-        free(state->fields[i]);
+        // free(state->fields[i]);
         state->fields[i] = NULL;
     }
     state->time = 0;
@@ -66,7 +47,7 @@ void reset_state(f_state* state) {
 }
 
 
-void update_field(struct field* p_field) {
+void update_field(field_t* p_field) {
     if (p_field == NULL) return;
 
     p_field->pattern.pattern_function(p_field->field, ++p_field->frame);

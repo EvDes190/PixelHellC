@@ -4,14 +4,13 @@
 #include <pthread.h>
 #include <conio.h>
 #include <stdio.h>
+#include <stdlib.h>
 
-#import "src/state.c"
-#import "render/window.c"
+#include "include/render.h"
+#include "include/state.h"
 
 #define FPS 60
 #define CLOCKS_PER_FRAME (CLOCKS_PER_SEC / FPS)
-
-
 
 
 void game_during(f_state* game_state) {
@@ -51,28 +50,36 @@ void game_during(f_state* game_state) {
 }
 
 int main() {
-    f_state* game_state = malloc(sizeof(*game_state));
+    // printf("%zu", sizeof(render_state_t));
+    f_state* game_state = malloc(sizeof(f_state));
     reset_state(game_state);
-    renderstate_t* renderstate = malloc(sizeof(*renderstate));
-    renderstate->height = 100, renderstate->width = 100;
-    renderstate->hwnd = GetForegroundWindow();
-    renderstate->hdc = GetDC(renderstate->hwnd);
+    render_state_t* render_state = malloc(sizeof(render_state_t));
+    render_state->height = 100, render_state->width = 100;
+    render_state->hwnd = GetForegroundWindow();
+    render_state->hdc = GetDC(render_state->hwnd);
 
     pthread_t* thread = malloc(sizeof(*thread));
-    struct render_args r_args = {
-        .state = renderstate,
+    render_args r_args = {
+        .state = render_state,
         .field_range = FIELD_RANGE,
-        //TODO: fix warning
+        .time = &game_state->time,
         .colors = game_state->colors};
     pthread_create(thread, NULL, render, &r_args);
 
 
     //TODO code system of restarting game
     while (1) {
+        game_during(game_state);
 
+        printf("Your time - %0.3lf.\nPress \"r\" to restart.", (double) game_state->time / CLOCKS_PER_FRAME);
+        if (kbhit()) {
+            if (getch() != 'r') {
+                break;
+            }
+        }
     }
 
     free(game_state);
-    free(renderstate);
+    free(render_state);
     free(thread);
 }

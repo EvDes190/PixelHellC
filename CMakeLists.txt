@@ -3,9 +3,17 @@ project(PixelHellC C)
 
 set(CMAKE_C_STANDARD 99)
 
-# Our Project
+include_directories("./include")
+include_directories("./include/render")
+
+aux_source_directory("./src" SRC)
+aux_source_directory("./src/render" RENDER)
+
+
 add_executable(PixelHellC main.c
-        render/window.c
+        src/render.c
         src/state.c
         src/pattern.c
-        src/patterns.c)
+        include/pattern.h
+        include/render.h
+        include/state.h)
