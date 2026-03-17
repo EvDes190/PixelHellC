@@ -31,7 +31,7 @@ typedef struct field_state {
 void update_field_top(f_state*);
 void reset_state(f_state*);
 void update_field(field_t*);
-void update_player(f_state*, int, int);
+void update_player(struct player*, int, int);
 int update_state(f_state*, int, int);
 
 #endif //PIXELHELLC_STATE_H

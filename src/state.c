@@ -1,6 +1,9 @@
 #include <stdlib.h>
-#include "../include/pattern.h"
-#include "../include/state.h"
+#include <time.h>
+#include <stdio.h>
+
+#include "pattern.h"
+#include "state.h"
 
 #define HP_MAX 1000
 
@@ -13,21 +16,21 @@ struct pattern choose_pattern(f_state* state) {
 void update_field_top(f_state* state) {
     for (int x = 0; x < FIELD_RANGE; x++) {
         for (int y = 0; y < FIELD_RANGE; y++) {
-            state->colors[x][y] = 0;
+            state->colors[y][x] = 0;
             int highest = 0;
             for (int i = 0; i < PATTERN_MAX; i++) {
                 if (state->fields[i] == NULL) continue;
 
                 // get color of highest pattern
                 if (highest < state->fields[i]->pattern.height && (state->fields[i]->field[y][x] & 0x00ffffff) != 0)
-                    state->colors[x][y] = state->fields[i]->field[y][x] & 0x00ffffff;
+                    state->colors[y][x] = state->fields[i]->field[y][x] & 0x00ffffff;
 
             }
         }
     }
 
     if (state->time != 0) {
-        state->colors[state->player.x][state->player.y] = 0x0000ff00;
+        state->colors[state->player.y][state->player.x] = 0x0000ff00;
     }
 }
 
@@ -57,19 +60,20 @@ void update_field(field_t* p_field) {
     }
 }
 
-void update_player(f_state* state, int move_x, int move_y) {
+void update_player(struct player* player, int move_x, int move_y) {
     //update player position
-    state->player.x += move_x;
-    state->player.y += move_y;
+    player->x += move_x;
+    player->y += move_y;
 
-    if (state->player.x < 0) state->player.x = 0;
-    else if (state->player.x >= FIELD_RANGE) state->player.x = FIELD_RANGE - 1;
-    if (state->player.y < 0) state->player.y = 0;
-    else if (state->player.y >= FIELD_RANGE) state->player.y = FIELD_RANGE - 1;
+    if (player->x < 0) player->x = 0;
+    else if (player->x >= FIELD_RANGE) player->x = FIELD_RANGE - 1;
+    if (player->y < 0) player->y = 0;
+    else if (player->y >= FIELD_RANGE) player->y = FIELD_RANGE - 1;
 }
 
 int update_state(f_state* state, int move_x, int move_y) {
-    update_player(state, move_x, move_y);
+    update_player(&state->player, move_x, move_y);
+    // printf("%0.2lf", (double)state->time / CLOCKS_PER_SEC);
 
     for (int i = 0; i <= state->fields_top; i++) {
         // updating objects by patterns
@@ -78,17 +82,11 @@ int update_state(f_state* state, int move_x, int move_y) {
 
         // damage for collision
         // get damage in XX000000 part of number
-        state->player.HP -= state->fields[i]->field[state->player.x][state->player.y] >> 24;
+        state->player.HP -= state->fields[i]->field[state->player.y][state->player.x] >> 24;
     }
 
+    // update colors for rendering
     update_field_top(state);
 
-
-    if (state->player.HP <= 0) {
-        return 1;
-    }
-
-    return 0;
+    return state->player.HP <= 0 ? 1 : 0;
 }
-
-

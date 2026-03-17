@@ -5,27 +5,24 @@
 #ifndef PIXELHELLC_WINDOWS_H
 #define PIXELHELLC_WINDOWS_H
 
-#include <windows.h>
 #include <time.h>
 
+#include "state.h"
 #include "pattern.h"
 
-typedef struct RenderState {
-    HWND hwnd;
-    HDC hdc;
+#define WINDOW_WIDTH 930
+#define WINDOW_HEIGHT 930
 
-    int width;
-    int height;
-} render_state_t;
+#define FPS 60
+#define CLOCKS_PER_FRAME (CLOCKS_PER_SEC / FPS)
 
-typedef struct render_args {
-    render_state_t* state;
-    int field_range;
+
+typedef struct {
     clock_t *time;
     unsigned int (*colors)[FIELD_RANGE];
-} render_args;
+} render_state;
 
-
-void* render(void *);
+void* init_render(void* args);
+void render(f_state*);
 
 #endif //PIXELHELLC_WINDOWS_H

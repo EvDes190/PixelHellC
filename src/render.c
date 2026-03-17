@@ -1,24 +1,23 @@
-#include <windows.h>
-#include <unistd.h>
+#include "raylib.h"
 
-#include "../include/render.h"
-
-
-void* render(void *args) {
-    render_args* r_args = args;
+#include "render.h"
+#include "state.h"
 
 
-    for (int x = 0; x < r_args->field_range; x++) {
-        for (int y = 0; y < r_args->field_range; y++) {
-            HPEN hPen = CreatePen(PS_SOLID, 2, r_args->colors[x][y]);
-            HBRUSH hBrush = CreateSolidBrush(r_args->colors[x][y]);
+void render(f_state* state) {
+    int tile_width = WINDOW_WIDTH / FIELD_RANGE;
+    int tile_height = WINDOW_HEIGHT / FIELD_RANGE;
 
-            SelectObject(r_args->state->hdc, hPen);
-            SelectObject(r_args->state->hdc, hBrush);
 
-            Rectangle(r_args->state->hdc, r_args->state->width * x, r_args->state->height * y, 30, 30);
+    BeginDrawing();
+    for (int x = 0; x < FIELD_RANGE; x++) {
+        for (int y = 0; y < FIELD_RANGE; y++) {
+            Color clr = GetColor(state->colors[y][x] << 8);
+            clr.a = 0xff;
+            DrawRectangle(x * tile_width, y * tile_height, tile_width, tile_height, clr);
         }
     }
 
-    return 0;
+    EndDrawing();
+
 }
