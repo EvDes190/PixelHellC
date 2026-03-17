@@ -53,10 +53,12 @@ void reset_state(f_state* state) {
 void update_field(field_t* p_field) {
     if (p_field == NULL) return;
 
-    p_field->pattern.pattern_function(p_field->field, ++p_field->frame);
-    if (p_field->frame < p_field->pattern.max_frame) {
-        free(p_field);
-        p_field = NULL;
+   (*p_field)->pattern.pattern_function((*p_field)->field, ++(*p_field)->frame / (*p_field)->pattern.speed);
+
+    // end pattern working when pattern is end
+    if ((*p_field)->frame / (*p_field)->pattern.speed > (*p_field)->pattern.max_frame) {
+        free(*p_field);
+        *p_field = NULL;
     }
 }
 
