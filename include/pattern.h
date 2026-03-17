@@ -21,12 +21,17 @@ typedef struct pattern {
 } pattern_t;
 
 typedef struct field {
-    //field[i][j] contains information about damage(0xXX000000) and color(0x00XXXXXX)
+    // field[i][j] contains information about damage(0xXX000000) and color(0x00XXXXXX)
     unsigned int field[FIELD_RANGE][FIELD_RANGE];
-    //every pattern lasts a certain number of frames
+    // every pattern lasts a certain number of frames
     int frame;
-    //information about patter what field contain
+    // information about patter what field contain
     pattern_t pattern;
 } field_t;
+
+int clear_field(unsigned int [FIELD_RANGE][FIELD_RANGE]);
+
+
+void bullet1(field_t* field);
 
 #endif //PIXELHELLC_PATTERN_H
