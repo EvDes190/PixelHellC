@@ -40,6 +40,7 @@ void init_game(f_state* game_state) {
 
 int main() {
     f_state game_state;
+    memset(&game_state.fields, 0, PATTERN_MAX * sizeof(game_state.fields));
     reset_state(&game_state);
 
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "PixelHellC");
