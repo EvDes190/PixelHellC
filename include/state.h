@@ -21,7 +21,6 @@ typedef struct field_state {
     struct field* fields[PATTERN_MAX];
     struct player player;
     unsigned int colors[FIELD_RANGE][FIELD_RANGE];
-    int fields_top;
     //time elapsed after start game
     clock_t time;
     //if 1 - game is on
@@ -30,7 +29,7 @@ typedef struct field_state {
 
 void update_field_top(f_state*);
 void reset_state(f_state*);
-void update_field(field_t*);
+void update_field(field_t**);
 void update_player(struct player*, int, int);
 int update_state(f_state*, int, int);
 
