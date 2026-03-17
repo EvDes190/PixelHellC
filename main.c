@@ -52,6 +52,8 @@ int main() {
         char final[100];
         sprintf(final, "Your time - %0.3lf.\nPress \"r\" to restart.\n", (double) game_state.time / CLOCKS_PER_FRAME);
         SetWindowTitle(final);
+
+        //TODO: fix waiting restart
         while (!IsKeyPressed('R'));
     }
     CloseWindow();
