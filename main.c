@@ -50,7 +50,7 @@ int main() {
         init_game(&game_state);
 
         char final[100];
-        sprintf(final, "Your time - %0.3lf. Press \"r\" to restart.", (double) game_state.time / CLOCKS_PER_FRAME);
+        sprintf(final, "Your time - %0.3lf. Press \"r\" to restart.", (double) game_state.time / CLOCKS_PER_SEC);
         SetWindowTitle(final);
 
         //TODO: fix waiting restart
