@@ -41,7 +41,7 @@ void reset_state(f_state* state) {
     update_field_top(state);
 
     state->game = 0;
-    state->player.HP = 0;
+    state->player.HP = HP_MAX;
     state->player.x = FIELD_RANGE / 2;
     state->player.y = FIELD_RANGE / 2;
 }
