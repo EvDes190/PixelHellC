@@ -54,7 +54,8 @@ int main() {
         SetWindowTitle(final);
 
         //TODO: fix waiting restart
-        while (!IsKeyPressed('R'));
+        while (!IsKeyPressed('R')) {}
+        reset_state(&game_state);
     }
     CloseWindow();
 }
