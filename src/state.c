@@ -6,11 +6,24 @@
 #include "state.h"
 
 #define HP_MAX 1000
+#define BASE_PATTERN_MODULE 1000
 
 // TODO: need to code function that spawns patterns according to certain rules
-struct pattern choose_pattern(f_state* state) {
-    struct pattern p;
-    return p;
+int choose_pattern(f_state* state) {
+    srand(clock() ^ time(NULL));
+    int random = rand() % BASE_PATTERN_MODULE;
+
+    if (random < 10) {
+
+        for (int i = 0; i < PATTERN_MAX; i++) {
+            if (state->fields[i] == NULL) {
+                state->fields[i] = malloc(sizeof(struct field));
+                bullet1(state->fields[i]);
+            }
+        }
+    }
+
+    return 1;
 }
 
 void update_field_top(f_state* state) {
@@ -29,18 +42,17 @@ void update_field_top(f_state* state) {
         }
     }
 
-    if (state->time != 0) {
-        state->colors[state->player.y][state->player.x] = 0x0000ff00;
-    }
+    if (state->time != 0)
+        state->colors[state->player.y][state->player.x] = 0x0000ff00; //GREEN
 }
 
 void reset_state(f_state* state) {
     for (int i = 0; i < PATTERN_MAX; i++) {
-        // free(state->fields[i]);
+        if (state->fields[i] != NULL)
+            free(state->fields[i]);
         state->fields[i] = NULL;
     }
     state->time = 0;
-    state->fields_top = -1;
     update_field_top(state);
 
     state->game = 0;
@@ -50,8 +62,8 @@ void reset_state(f_state* state) {
 }
 
 
-void update_field(field_t* p_field) {
-    if (p_field == NULL) return;
+void update_field(field_t** p_field) {
+    if (*p_field == NULL) return;
 
    (*p_field)->pattern.pattern_function((*p_field)->field, ++(*p_field)->frame / (*p_field)->pattern.speed);
 
@@ -75,17 +87,19 @@ void update_player(struct player* player, int move_x, int move_y) {
 
 int update_state(f_state* state, int move_x, int move_y) {
     update_player(&state->player, move_x, move_y);
-    // printf("%0.2lf", (double)state->time / CLOCKS_PER_SEC);
 
-    for (int i = 0; i <= state->fields_top; i++) {
+    for (int i = 0; i < PATTERN_MAX; i++) {
         // updating objects by patterns
-        update_field(state->fields[i]);
+        update_field(&state->fields[i]);
         if (state->fields[i] == NULL) continue;
 
         // damage for collision
         // get damage in XX000000 part of number
         state->player.HP -= state->fields[i]->field[state->player.y][state->player.x] >> 24;
     }
+
+    // spawn new objects
+    choose_pattern(state);
 
     // update colors for rendering
     update_field_top(state);
