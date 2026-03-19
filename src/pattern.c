@@ -1,7 +1,5 @@
-#include <stdlib.h>
-#include <stdio.h>
-
 #include "pattern.h"
+#include <state.h>
 
 #include <string.h>
 
@@ -41,9 +39,9 @@ int process_bullets1(unsigned int (*field)[FIELD_RANGE], int frame) {
 
 void bullet1(field_t* field) {
     field->pattern.pattern_function = process_bullets1;
-    field->pattern.max_frame = 32;
+    field->pattern.max_updates = 32;
     field->pattern.height = 1;
-    field->pattern.speed = 10;
+    field->pattern.update_frames = 11;
     field->frame = 0;
 
     clear_field(field->field);

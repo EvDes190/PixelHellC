@@ -1,12 +1,20 @@
 #include <stdlib.h>
 #include <time.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "pattern.h"
 #include "state.h"
 
 #define HP_MAX 1000
 #define BASE_PATTERN_MODULE 1000
+
+int clear_field(unsigned int field[FIELD_RANGE][FIELD_RANGE]) {
+    for (int y = 0; y < FIELD_RANGE; y++) {
+        memset(field[y], 0, sizeof(unsigned int) * FIELD_RANGE);
+    }
+    return 0;
+}
 
 // TODO: need to code function that spawns patterns according to certain rules
 int choose_pattern(f_state* state) {
@@ -65,10 +73,10 @@ void reset_state(f_state* state) {
 void update_field(field_t** p_field) {
     if (*p_field == NULL) return;
 
-   (*p_field)->pattern.pattern_function((*p_field)->field, ++(*p_field)->frame / (*p_field)->pattern.speed);
+   (*p_field)->pattern.pattern_function((*p_field)->field, ++(*p_field)->frame / (*p_field)->pattern.update_frames);
 
     // end pattern working when pattern is end
-    if ((*p_field)->frame / (*p_field)->pattern.speed > (*p_field)->pattern.max_frame) {
+    if ((*p_field)->frame / (*p_field)->pattern.update_frames > (*p_field)->pattern.max_updates) {
         free(*p_field);
         *p_field = NULL;
     }

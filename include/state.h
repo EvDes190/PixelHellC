@@ -27,6 +27,7 @@ typedef struct field_state {
     int game;
 } f_state;
 
+int clear_field(unsigned int [FIELD_RANGE][FIELD_RANGE]);
 void update_field_top(f_state*);
 void reset_state(f_state*);
 void update_field(field_t**);

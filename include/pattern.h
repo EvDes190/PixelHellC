@@ -12,10 +12,10 @@ typedef struct pattern {
     //pattern function draw object on a field of pattern at the every frame
     int (*pattern_function) (unsigned int field[FIELD_RANGE][FIELD_RANGE], int frame);
     //after max_frame field will not updating; this value calculate for each pattern-function
-    int max_frame;
+    int max_updates;
     //speed is responsible how many frames need to update field by pattern function
     //calling pattern-function, division field.frame by speed
-    int speed;
+    int update_frames;
     //height need to choice color for render full field
     int height;
 } pattern_t;
@@ -29,7 +29,6 @@ typedef struct field {
     pattern_t pattern;
 } field_t;
 
-int clear_field(unsigned int [FIELD_RANGE][FIELD_RANGE]);
 
 
 void bullet1(field_t* field);
