@@ -3,13 +3,6 @@
 
 #include <string.h>
 
-int clear_field(unsigned int field[FIELD_RANGE][FIELD_RANGE]) {
-    for (int y = 0; y < FIELD_RANGE; y++) {
-        memset(field[y], 0, sizeof(unsigned int) * FIELD_RANGE);
-    }
-    return 0;
-}
-
 //TODO: code some patterns, equation or massive of frames
 
 // _#___#___#___#___#___#___#___#_  -2
@@ -39,10 +32,11 @@ int process_bullets1(unsigned int (*field)[FIELD_RANGE], int frame) {
 
 void bullet1(field_t* field) {
     field->pattern.pattern_function = process_bullets1;
-    field->pattern.max_updates = 32;
+    // field->pattern.max_updates = 32;
     field->pattern.height = 1;
     field->pattern.update_frames = 11;
     field->frame = 0;
 
     clear_field(field->field);
 }
+
