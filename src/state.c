@@ -73,10 +73,8 @@ void reset_state(f_state* state) {
 void update_field(field_t** p_field) {
     if (*p_field == NULL) return;
 
-   (*p_field)->pattern.pattern_function((*p_field)->field, ++(*p_field)->frame / (*p_field)->pattern.update_frames);
-
     // end pattern working when pattern is end
-    if ((*p_field)->frame / (*p_field)->pattern.update_frames > (*p_field)->pattern.max_updates) {
+    if ((*p_field)->pattern.pattern_function((*p_field)->field, ++(*p_field)->frame / (*p_field)->pattern.update_frames) == 0) {
         free(*p_field);
         *p_field = NULL;
     }
