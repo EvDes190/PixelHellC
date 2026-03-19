@@ -30,11 +30,8 @@ else()
 endif()
 
 
-
 include_directories("include")
 include_directories("include/render")
-#include_directories("./raylib/src/include")
-#aux_source_directory("raylib/src/lib" RAY)
 aux_source_directory("./src" SRC)
 aux_source_directory("./src/render" RENDER)
 
@@ -43,15 +40,9 @@ add_executable(PixelHellC main.c
         src/render.c
         src/state.c
         src/pattern.c
-#        raylib/src/lib/raylib.dll
-#        raylib/src/lib/libraylib.a
-#        raylib/src/lib/libraylibdll.a
         include/pattern.h
         include/render.h
         include/state.h
-#        raylib/src/include/raymath.h
-#        raylib/src/include/raylib.h
-#        raylib/src/include/rlgl.h
 )
 
 # set the include directory
