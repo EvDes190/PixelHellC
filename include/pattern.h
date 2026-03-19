@@ -31,6 +31,7 @@ typedef struct field {
 
 
 
-void bullet1(field_t* field);
+void Bullets_1(field_t* field);
+void Lasers_2(field_t* field);
 
 #endif //PIXELHELLC_PATTERN_H
