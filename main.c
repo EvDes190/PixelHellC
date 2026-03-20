@@ -1,5 +1,7 @@
 #include <time.h>
 #include <stdio.h>
+#include <string.h>
+
 
 #include "raylib.h"
 
@@ -40,9 +42,11 @@ void init_game(f_state* game_state) {
 
 int main() {
     f_state game_state;
-    memset(&game_state.fields, 0, PATTERN_MAX * sizeof(game_state.fields));
+    memset(&game_state.fields, 0, PATTERN_MAX * sizeof(struct field*));
     reset_state(&game_state);
-
+    // TODO support icon
+    // Image icon = LoadImage("icon_by_Freepic.png");
+    // SetWindowIcon(icon);
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "PixelHellC");
     SetTargetFPS(FPS);
 

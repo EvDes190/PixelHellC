@@ -5,7 +5,7 @@
 #ifndef PIXELHELLC_PATTERN_H
 #define PIXELHELLC_PATTERN_H
 
-#define PATTERN_MAX 10
+#define PATTERN_MAX 30
 #define FIELD_RANGE 31
 
 typedef struct pattern {
@@ -31,7 +31,8 @@ typedef struct field {
 
 
 
-void Bullets_1(field_t* field);
-void Lasers_2(field_t* field);
+void Bullets_1(field_t*);
+void Lasers_1(field_t*);
+void Spiral_1(field_t*);
 
 #endif //PIXELHELLC_PATTERN_H

@@ -11,7 +11,7 @@
 
 
 struct player {
-    unsigned int HP;
+    int HP;
     int x;
     int y;
 };
@@ -23,8 +23,6 @@ typedef struct field_state {
     unsigned int colors[FIELD_RANGE][FIELD_RANGE];
     //time elapsed after start game
     clock_t time;
-    //if 1 - game is on
-    int game;
 } f_state;
 
 int clear_field(unsigned int [FIELD_RANGE][FIELD_RANGE]);

@@ -9,6 +9,7 @@
 #define HP_MAX 1000
 #define BASE_PATTERN_MODULE 1000
 
+
 int clear_field(unsigned int field[FIELD_RANGE][FIELD_RANGE]) {
     for (int y = 0; y < FIELD_RANGE; y++) {
         memset(field[y], 0, sizeof(unsigned int) * FIELD_RANGE);
@@ -21,14 +22,41 @@ int choose_pattern(f_state* state) {
     srand(clock() ^ time(NULL));
     int random = rand() % BASE_PATTERN_MODULE;
 
-    if (random < 10) {
 
-        for (int i = 0; i < PATTERN_MAX; i++) {
-            if (state->fields[i] == NULL) {
-                state->fields[i] = malloc(sizeof(struct field));
-                bullet1(state->fields[i]);
-            }
-        }
+    static int bullets_1_count = 5 * 11;
+    static int lasers_1_count = 25 * 11;
+    static int spiral_1_count = 30 * 5;
+    // printf("%d %d\n", lasers_1_count, bullets_1_count);
+
+    int i = 0;
+    for (; i < PATTERN_MAX; i++) {
+        if (state->fields[i] == NULL) break;
+        if (i == PATTERN_MAX - 1) return 0;
+    }
+
+
+    bullets_1_count--;
+    lasers_1_count--;
+    spiral_1_count--;
+
+    if (random < 10) {
+        if (bullets_1_count > 0) return 0;
+        state->fields[i] = malloc(sizeof(struct field));
+        Bullets_1(state->fields[i]);
+
+        bullets_1_count = 5 * 11;
+    } else if (random < 20) {
+        if (lasers_1_count > 0) return 0;
+        state->fields[i] = malloc(sizeof(struct field));
+        Lasers_1(state->fields[i]);
+
+        lasers_1_count = 25 * 11;
+    } else if (random < 30) {
+        if (spiral_1_count > 0) return 0;
+        state->fields[i] = malloc(sizeof(struct field));
+        Spiral_1(state->fields[i]);
+
+        spiral_1_count = 10 * 5;
     }
 
     return 1;
@@ -63,7 +91,6 @@ void reset_state(f_state* state) {
     state->time = 0;
     update_field_top(state);
 
-    state->game = 0;
     state->player.HP = HP_MAX;
     state->player.x = FIELD_RANGE / 2;
     state->player.y = FIELD_RANGE / 2;
